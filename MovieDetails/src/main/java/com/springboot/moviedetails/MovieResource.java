@@ -1,5 +1,7 @@
 package com.springboot.moviedetails;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +16,8 @@ import com.springboot.moviedetails.model.MovieSummary;
 @RequestMapping("/movies")
 public class MovieResource {
 
+	Logger logger = LoggerFactory.getLogger(MovieResource.class);
+	
     @Value("${api.key}")
     private String apiKey;
 
@@ -22,7 +26,7 @@ public class MovieResource {
     
     @RequestMapping("/all")
     private MovieSummary getAllMovies() {   
-    	System.out.println("Get all Movies");
+    	logger.info("Get all Movies");
     	MovieSummary moviesList = restTemplate.getForObject("https://api.themoviedb.org/3/discover/movie?api_key=" +  apiKey, MovieSummary.class);
     	
     	return moviesList;
@@ -31,7 +35,9 @@ public class MovieResource {
 
     @RequestMapping("/{movieId}")
     public Movie getMovieInfo(@PathVariable("movieId") String movieId) {
+    	logger.info("getMovieInfo");
         Movie movie = restTemplate.getForObject("https://api.themoviedb.org/3/movie/" + movieId + "?api_key=" +  apiKey, Movie.class);
+        logger.info(movie.toString());
         return movie;
 
     }
